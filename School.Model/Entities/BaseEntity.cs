@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace School.Model.Entities
 {
-    public class Group : BaseEntity
+    public class BaseEntity : IEntity
     {
-        public ICollection<Student> Students { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

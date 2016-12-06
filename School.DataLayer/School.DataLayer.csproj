@@ -49,9 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\ISchoolRepository.cs" />
+    <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Abstract\IUnitOfWork.cs" />
+    <Compile Include="Concrete\BaseEFRepositiry.cs" />
     <Compile Include="Concrete\EFSchoolContext.cs" />
-    <Compile Include="Concrete\EFSchoolRepository.cs" />
+    <Compile Include="Concrete\EFUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

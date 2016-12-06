@@ -16,7 +16,7 @@ namespace School.CompositionRoot
             builder.RegisterControllers(executingAssembly);
             builder.RegisterSource(new ViewRegistrationSource());
 
-            builder.RegisterType<EFSchoolRepository>().As<ISchoolRepository>();
+            builder.RegisterType<EFUnitOfWork>().As<IUnitOfWork>();
             builder.RegisterType<StudentsBL>();
 
             var container = builder.Build();

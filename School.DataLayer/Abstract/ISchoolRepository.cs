@@ -11,6 +11,9 @@ namespace School.DataLayer.Abstract
 {
     public interface ISchoolRepository
     {
-        IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> condition, Expression<Func<Student, object>> orderBy, PageInf pageInf);
+        IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> wherePredicate,
+                                         Expression<Func<Student, object>> orderByPredicate, PageInf pageInf);
+        IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> wherePredicate,
+                                         Expression<Func<Student, object>> orderByPredicate, bool orderByDesc, PageInf pageInf);
     }
 }

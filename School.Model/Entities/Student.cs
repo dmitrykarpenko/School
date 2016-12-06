@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace School.Model.Entities
 {
-    public class Student
+    public class Student : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
         public int GroupId { get; set; }
         public Group Group { get; set; }
     }

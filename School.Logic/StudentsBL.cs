@@ -12,16 +12,18 @@ namespace School.Logic
 {
     public class StudentsBL
     {
-        private ISchoolRepository _schoolRepository;
+        private IUnitOfWork _unitOfWork;
 
-        public StudentsBL(ISchoolRepository schoolRepository)
+        public StudentsBL(IUnitOfWork unitOfWork)
         {
-            _schoolRepository = schoolRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> condition, Expression<Func<Student, object>> orderBy, PageInf pageInf)
+        public IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> condition, Expression<Func<Student, object>> orderByDesc, PageInf pageInf)
         {
-            return _schoolRepository.GetStudents(condition, orderBy, pageInf);
+            var studentsRepo = _unitOfWork.GetRepositiry<Student>();
+            var students = studentsRepo.Get(condition, pageInf, s => s.Group, orderByDesc, true);
+            return students;
         }
     }
 }
