@@ -17,10 +17,10 @@ namespace School.Web.Controllers
         }
         public ActionResult Index()
         {
-            var pageInf = new PageInf() { Page = 1, PageSize = 5 };
-            var students1 = _logic.GetStudents(s => !s.Name.Contains("4"), s => s.Name, pageInf);
-            pageInf.Page = 2;
+            var pageInf = new PageInf() { Page = 1, PageSize = 20 };
             var students = _logic.GetStudents(s => !s.Name.Contains("4"), s => s.Name, pageInf);
+            //pageInf.Page = 2;
+            //var students1 = _logic.GetStudents(s => !s.Name.Contains("4"), s => s.Name, pageInf);
             return View(students);
         }
     }

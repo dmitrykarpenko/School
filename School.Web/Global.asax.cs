@@ -1,8 +1,4 @@
-﻿using Autofac;
-using Autofac.Integration.Mvc;
-using School.DataLayer.Abstract;
-using School.DataLayer.Concrete;
-using School.Logic;
+﻿using School.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,18 +24,7 @@ namespace School.Web
 
         private void RegisterAutofac()
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterControllers(Assembly.GetExecutingAssembly());
-            builder.RegisterSource(new ViewRegistrationSource());
-
-            builder.RegisterType<EFSchoolRepository>().As<ISchoolRepository>();
-            builder.RegisterType<StudentsBL>();
-
-            var container = builder.Build();
-
-            //var resolver = new AutofacDependencyResolver(container)
             var resolver = CompositionRoot.DependencyInjector.GetAutofacResolver(Assembly.GetExecutingAssembly());
-
             DependencyResolver.SetResolver(resolver);
         }
     }
