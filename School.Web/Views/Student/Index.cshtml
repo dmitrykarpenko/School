@@ -1,7 +1,46 @@
 ﻿@model ICollection<School.Model.Entities.Student>
+@using System.Web.Script.Serialization
 
 @{
     ViewBag.Title = "Students";
+    //TODO: handle circ ref
+    string data = new JavaScriptSerializer().Serialize(new { students = Model });
+}
+
+@section scripts
+{
+    <script src="~/Scripts/knockout-3.4.0.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+
+    <script src="~/Scripts/FileSaver.min.js"></script>
+    <script src="~/Scripts/studentsViewModel.js"></script>
+    <script type="text/javascript">
+
+        ko.extenders.required = function(target, overrideMessage) {
+            //add some sub-observables to our observable
+            target.hasError = ko.observable();
+            target.validationMessage = ko.observable();
+
+            //define a function to do validation
+            function validate(newValue) {
+                target.hasError(newValue ? false : true);
+                target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
+            }
+
+            //initial validation
+            validate(target());
+
+            //validate whenever the value changes
+            target.subscribe(validate);
+
+            //return the original observable
+            return target;
+        };
+
+        var data = @Html.Raw(data);
+        var viewModel = new StudentsModel(data);
+        ko.applyBindings(viewModel);
+    </script>
 }
 
 <div class="jumbotron">
@@ -26,4 +65,34 @@
             }
         </tbody>
     </table>
+</div>
+
+<div class="row">
+    <form class="text-center">
+        <div>We have <span data-bind='text: students().length'>&nbsp;</span> students(s):</div>
+        <div data-bind='visible: message().length > 0'><span class="alert alert-success" data-bind='text: message'>&nbsp;</span></div>
+        <table data-bind='visible: students().length > 0'>
+            <thead>
+                <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th />
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: students'>
+                <tr>
+                    <td>
+                        <input type="text" data-bind='value: Name' required placeholder="name" /><br>
+                        <span class="text-success" data-bind='visible: Name.hasError, text: Name.validationMessage'> </span>
+                    </td>
+                    <td><a href='#' data-bind='click: $root.removeStudent'>Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="btn btn-success" data-bind='click: getAll'>Refresh table</button>
+        <button class="btn btn-success" data-bind='click: exportToFile'>Export to file</button>
+        <button class="btn btn-success" data-bind='click: addNewStudent'>Add new row</button>
+        <button class="btn btn-danger" data-bind='enable: students().length > 0, click: saveAll' type='submit'>Save all</button>
+    </form>
 </div>
