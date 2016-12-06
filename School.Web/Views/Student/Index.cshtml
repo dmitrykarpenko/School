@@ -1,0 +1,29 @@
+﻿@model ICollection<School.Model.Entities.Student>
+
+@{
+    ViewBag.Title = "Students";
+}
+
+<div class="jumbotron">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<div class="row">
+    <table class="table table-hover table-striped table-condensed">
+        <thead class="thead-inverse">
+            <tr>
+                <th>Student (name)</th>
+                <th>Student's group (name)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.Name</td>
+                    <td>@(student.Group != null ? student.Group.Name : "(no group)")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
