@@ -19,11 +19,34 @@ namespace School.Logic
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> condition, Expression<Func<Student, object>> orderByDesc, PageInf pageInf)
+        public IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> filter = null, PageInf pageInf = null,
+                                                Expression<Func<Student, object>> orderBy = null, bool byDesc = false)
         {
             var studentsRepo = _unitOfWork.GetRepositiry<Student>();
-            var students = studentsRepo.Get(condition, pageInf, s => s.Group, orderByDesc, true);
+
+            var students = studentsRepo.Get(filter, pageInf, s => s.Group, orderBy, byDesc);
+
             return students;
+        }
+
+        public virtual IEnumerable<Student> InsertOrUpdate(IEnumerable<Student> students)
+        {
+            var studentsRepo = _unitOfWork.GetRepositiry<Student>();
+
+            var retStudents = studentsRepo.InsertOrUpdate(students);
+            _unitOfWork.Save();
+
+            return retStudents;
+        }
+
+        public virtual IEnumerable<Student> Delete(int studentId)
+        {
+            var studentsRepo = _unitOfWork.GetRepositiry<Student>();
+
+            var retStudents = studentsRepo.Delete(studentId);
+            _unitOfWork.Save();
+
+            return retStudents;
         }
     }
 }

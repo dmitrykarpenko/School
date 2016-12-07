@@ -13,7 +13,7 @@ namespace School.DataLayer.Abstract
     {
         IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, PageInf pageInf = null,
                            Expression<Func<T, object>> include = null,
-                           Expression<Func<T, object>> orderBy = null, bool orderByDesc = false);
+                           Expression<Func<T, object>> orderBy = null, bool byDesc = false);
         IEnumerable<T> InsertOrUpdate(IEnumerable<T> entities);
         IEnumerable<T> Delete(int id);
         IEnumerable<T> Delete(Expression<Func<T, bool>> filter);

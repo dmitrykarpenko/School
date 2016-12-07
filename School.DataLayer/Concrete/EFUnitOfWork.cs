@@ -30,7 +30,7 @@ namespace School.DataLayer.Concrete
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _context.SaveChanges();
         }
 
         #region dispose

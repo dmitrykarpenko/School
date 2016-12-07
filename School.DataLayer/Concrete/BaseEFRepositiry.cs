@@ -23,7 +23,7 @@ namespace School.DataLayer.Concrete
 
         public virtual IEnumerable<T> Get(Expression<Func<T, bool>> filter = null, PageInf pageInf = null,
                                           Expression<Func<T, object>> include = null,
-                                          Expression<Func<T, object>> orderBy = null, bool orderByDesc = false)
+                                          Expression<Func<T, object>> orderBy = null, bool byDesc = false)
         {
             IQueryable<T> query = _dbSet;
 
@@ -31,7 +31,7 @@ namespace School.DataLayer.Concrete
                 query = query.Where(filter);
 
             if (orderBy != null)
-                query = orderByDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+                query = byDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
             if (pageInf != null && pageInf.Page > 1 && pageInf.PageSize > 0)
             {
