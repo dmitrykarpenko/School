@@ -19,7 +19,8 @@ namespace School.Web
                 config.CreateMap<Student, StudentVM>();
                 config.CreateMap<StudentVM, Student>()
                       .ForMember(dest => dest.GroupId,
-                                 opt => opt.MapFrom(src => src.Group != null ? src.Group.Id : 0));
+                                 opt => opt.MapFrom(src => src.Group != null & src.Group.Id != 0 ?
+                                                    (int?)src.Group.Id : null));
             });
         }
     }

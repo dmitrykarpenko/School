@@ -1,4 +1,5 @@
-﻿using School.Model.Entities;
+﻿using School.DataLayer.Configurations;
+using School.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -16,5 +17,12 @@ namespace School.DataLayer.Concrete
         }
         public DbSet<Student> Students { get; set; }
         public DbSet<Group> Groups { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Configurations.Add(new StudentsConfiguration());
+        }
     }
 }

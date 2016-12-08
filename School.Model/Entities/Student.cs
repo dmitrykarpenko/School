@@ -8,7 +8,7 @@ namespace School.Model.Entities
 {
     public class Student : BaseEntity
     {
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; } = null;
         public Group Group { get; set; }
     }
 }

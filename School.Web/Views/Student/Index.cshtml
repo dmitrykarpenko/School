@@ -23,13 +23,13 @@
     </debug>
 
     <script src="~/Scripts/KoHelpers/koHelpers.js"></script>
-    <script src="~/Scripts/KoViewModels/studentsViewModel.js"></script>
+    <script src="~/Scripts/KoViewModels/studentsPageVM.js"></script>
     <script type="text/javascript">
         (function(){
-            ko.extenders.required = koHelpers.koRequiredExtender;
+            //ko.extenders.required = koHelpers.koRequiredExtender;
 
             var data = @Html.Raw(data);
-            var viewModel = new StudentsViewModel(data);
+            var viewModel = new StudentsPageVM(data);
             ko.applyBindingsWithValidation(viewModel);    
         })();
     </script>
@@ -59,11 +59,11 @@
                 <tr class="form-group">
                     <td>
                         <input type="text" data-bind='value: Name' class="form-control" placeholder="name" />@*<br>*@
-                        <span data-bind='visible: Name.hasError, text: Name.validationMessage' class="text-danger"> </span>
+                        @*<span data-bind='visible: Name.hasError, text: Name.validationMessage' class="text-danger">&nbsp;</span>*@
                     </td>
                     <td>
-                        <input type="text" data-bind='value: Group.Name' class="form-control" placeholder="name" />@*<br>*@
-                        <span data-bind='visible: Group.Name.hasError, text: Group.Name.validationMessage' class="text-danger"> </span>
+                        <input type="text" data-bind='value: Group().Name' class="form-control" placeholder="name" />@*<br>*@
+                        @*<span data-bind='visible: Group().Name.hasError, text: Group().Name.validationMessage' class="text-danger">&nbsp;</span>*@
                     </td>
                     <td><a href='#' data-bind='click: $root.deleteStudent' class="btn btn-danger">Delete</a></td>
                 </tr>
@@ -71,7 +71,7 @@
         </table>
 
         <button class="btn btn-success" data-bind='click: getPage'>Refresh table</button>
-        @*<button class="btn btn-success" data-bind='click: addNewStudent'>Add new row</button>*@
+        <button class="btn btn-success" data-bind='click: addNewStudent'>Add new row</button>
         <button class="btn btn-warning" data-bind='enable: students().length > 0, click: saveAll' type='submit'>Save all</button>
     </form>
 </div>

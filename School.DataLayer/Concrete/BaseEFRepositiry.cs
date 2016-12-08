@@ -58,18 +58,25 @@ namespace School.DataLayer.Concrete
 
         public virtual IEnumerable<T> InsertOrUpdate(IEnumerable<T> entities)
         {
-            var ret = new List<T>(entities);
+            var ret = entities;// new List<T>(entities);
             foreach (var entity in entities)
                 if (entity.Id == 0)
                 {
                     T addedEntity = _dbSet.Add(entity);
-                    //TODO: fill added item id in "ret list"
+                    //_context.Entry(entity).State = EntityState.Added;
+                    ////TODO: fill added item id in "ret list"
                 }
                 else
                 {
-                    _dbSet.Attach(entity);
-                    _context.Entry(entity).State = EntityState.Modified;
+                    T temp = _dbSet.Attach(entity);
                 }
+
+            foreach (var entity in entities)
+            {
+                _dbSet.Add(entity);
+                _context.Entry(entity).State = entity.Id == 0 ? EntityState.Added : EntityState.Modified;
+            }
+
             return ret;
         }
 
