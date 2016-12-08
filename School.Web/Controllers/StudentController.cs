@@ -1,4 +1,6 @@
-﻿using School.Logic;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using School.Logic;
 using School.Model.Entities;
 using School.Model.Helpers;
 using School.Web.ViewModels;
@@ -12,31 +14,39 @@ namespace School.Web.Controllers
 {
     public class StudentController : Controller
     {
-        private StudentsBL _logic;
-        public StudentController(StudentsBL logic)
+        private StudentsLogic _studentsLogic;
+        private GroupsLogic _groupsLogic;
+        public StudentController(StudentsLogic studentsLogic, GroupsLogic groupsLogic)
         {
-            _logic = logic;
+            _studentsLogic = studentsLogic;
+            _groupsLogic = groupsLogic;
         }
+
+        //public static readonly JsonSerializerSettings jsonSerSettings = new JsonSerializerSettings()
+        //    {
+        //        ContractResolver = new CamelCasePropertyNamesContractResolver()
+        //    };
+
         public ActionResult Index()
         {
             var pageInf = new PageInf() { Page = 1, PageSize = 20 };
-            //var students2 = _logic.GetStudents(s => !s.Name.Contains("4"), pageInf, s => s.Name);
-            //pageInf.Page = 2;
-            //var students1 = _logic.GetStudents(s => !s.Name.Contains("4"), s => s.Name, pageInf);
 
-            var students = _logic.GetStudents(null, pageInf, s => s.Name);
+            var students = _studentsLogic.GetStudents(null, pageInf, s => s.Name);
+            var availableGroups = _groupsLogic.GetGroups();
 
             var studentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(students);
+            var availableGroupVMs = AutoMapper.Mapper.Map<IEnumerable<GroupVM>>(availableGroups);
 
-            return View(studentVMs);
+            var viewModel = new StudentsPageVM() { Students = studentVMs, AvailableGroups = availableGroupVMs, PageInf = pageInf };
+
+            return View(viewModel);
         }
 
         public JsonResult Save(IEnumerable<StudentVM> studentVMs)
         {
             var students = AutoMapper.Mapper.Map<IEnumerable<Student>>(studentVMs);
-
-            //todo: manage nested groups
-            var retStudents = _logic.InsertOrUpdate(students);
+            
+            var retStudents = _studentsLogic.InsertOrUpdate(students);
 
             var retStudentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(retStudents);
 
@@ -50,9 +60,18 @@ namespace School.Web.Controllers
                 Response.StatusCode = 400;
                 return Json(new { error = "Invalid student id!" });
             }
-            var retStudent = _logic.Delete(id);
+            var retStudent = _studentsLogic.Delete(id);
 
             return Json(new { });
+        }
+
+        public JsonResult GetPage(PageInf pageInf)
+        {
+            var students = _studentsLogic.GetStudents(null, pageInf, s => s.Name);
+
+            var studentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(students);
+
+            return Json(new { students = studentVMs });
         }
     }
 }

@@ -1,27 +1,37 @@
-﻿@model ICollection<School.Web.ViewModels.StudentVM>
+﻿@model School.Web.ViewModels.StudentsPageVM
 @using System.Web.Script.Serialization
 
 @{
     ViewBag.Title = "Students";
-    //TODO: handle circ ref
-    string data = new JavaScriptSerializer().Serialize(new { students = Model });
+    string data = new JavaScriptSerializer().Serialize(Model);
 }
 
 @section scripts
 {
-    <script src="~/Scripts/knockout-3.4.0.js"></script>
-    <script src="~/Scripts/knockout.validation.min.js"></script>
-    @*<script src="~/Scripts/knockout.mapping-latest.js"></script>*@
-    @*<script src="~/Scripts/FileSaver.min.js"></script>*@
+    <non-debug>
+        @*non-debug*@
+        @*<script src="~/Scripts/knockout-3.4.0.js"></script>
+            <script src="~/Scripts/knockout.validation.min.js"></script>
+            <script src="~/Scripts/knockout.mapping-latest.js"></script>*@
+        @*<script src="~/Scripts/FileSaver.min.js"></script>*@
+    </non-debug>
+
+    <debug>
+        <script src="~/Scripts/knockout-3.4.0.debug.js"></script>
+        <script src="~/Scripts/knockout.validation.js"></script>
+        <script src="~/Scripts/knockout.mapping-latest.debug.js"></script>
+    </debug>
 
     <script src="~/Scripts/KoHelpers/koHelpers.js"></script>
     <script src="~/Scripts/KoViewModels/studentsViewModel.js"></script>
     <script type="text/javascript">
+        (function(){
+            ko.extenders.required = koHelpers.koRequiredExtender;
 
-        ko.extenders.required = koHelpers.koRequiredExtender;
-        var data = @Html.Raw(data);
-        var viewModel = new StudentsViewModel(data);
-        ko.applyBindings(viewModel);
+            var data = @Html.Raw(data);
+            var viewModel = new StudentsViewModel(data);
+            ko.applyBindingsWithValidation(viewModel);    
+        })();
     </script>
 }
 
@@ -32,7 +42,9 @@
 <div class="row">
     <form class="text-center">
         <div class="alert alert-info">We have <span data-bind='text: students().length'>&nbsp;</span> student(s):</div>
-        <div data-bind='visible: message().length > 0' class="alert alert-success">
+
+        <div data-bind='visible: message().length > 0' class="alert alert-success alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             <span data-bind='text: message'>&nbsp;</span>
         </div>
         <table data-bind='visible: students().length > 0' class="table table-hover table-striped table-condensed">
@@ -58,8 +70,8 @@
             </tbody>
         </table>
 
-        <button class="btn btn-success" data-bind='click: getAll'>Refresh table</button>
-        <button class="btn btn-success" data-bind='click: addNewStudent'>Add new row</button>
+        <button class="btn btn-success" data-bind='click: getPage'>Refresh table</button>
+        @*<button class="btn btn-success" data-bind='click: addNewStudent'>Add new row</button>*@
         <button class="btn btn-warning" data-bind='enable: students().length > 0, click: saveAll' type='submit'>Save all</button>
     </form>
 </div>

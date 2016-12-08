@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace School.Logic
 {
-    public class StudentsBL
+    public class StudentsLogic
     {
         private IUnitOfWork _unitOfWork;
 
-        public StudentsBL(IUnitOfWork unitOfWork)
+        public StudentsLogic(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -31,18 +31,28 @@ namespace School.Logic
 
         public virtual IEnumerable<Student> InsertOrUpdate(IEnumerable<Student> students)
         {
-            var studentsRepo = _unitOfWork.GetRepositiry<Student>();
+            //preserve groups
+            var groupsArr = students.Select(s => s.Group).ToArray();
+            //set groups to null to update only students data
+            foreach (var student in students)
+                student.Group = null;
 
-            var retStudents = studentsRepo.InsertOrUpdate(students);
+            var studentsRepo = _unitOfWork.GetRepositiry<Student>();
+            var insOrUpdStudents = studentsRepo.InsertOrUpdate(students);
             _unitOfWork.Save();
 
-            return retStudents;
+            var insOrUpdStudentsArr = insOrUpdStudents.ToArray();
+
+            //set groups for updated students
+            for (int i = 0; i < Math.Max(groupsArr.Length, insOrUpdStudentsArr.Length); ++i)
+                insOrUpdStudentsArr[i].Group = groupsArr[i];
+
+            return insOrUpdStudentsArr;
         }
 
         public virtual IEnumerable<Student> Delete(int studentId)
         {
             var studentsRepo = _unitOfWork.GetRepositiry<Student>();
-
             var retStudents = studentsRepo.Delete(studentId);
             _unitOfWork.Save();
 
