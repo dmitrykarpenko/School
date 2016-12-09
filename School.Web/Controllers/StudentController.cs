@@ -29,7 +29,7 @@ namespace School.Web.Controllers
 
         public ActionResult Index()
         {
-            var pageInf = new PageInf() { Page = 1, PageSize = 20 };
+            var pageInf = new PageInf() { Page = 1, PageSize = 10 };
 
             var students = _studentsLogic.GetStudents(null, pageInf, s => s.Name);
             var availableGroups = _groupsLogic.GetGroups();

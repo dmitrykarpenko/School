@@ -6,12 +6,11 @@ var StudentsPageVM = function (vmData) {
 
     self.students = ko.observableArray(toArrayOfStudentVMs(vmData.Students));
     self.availableGroups = ko.observableArray(toArrayOfGroupVMs(vmData.AvailableGroups));
-    self.pageInf = ko.observable(vmData.PageInf);
+    self.pageInf = vmData.PageInf;
     self.newStudent = ko.validatedObservable(new StudentVM());
     self.message = ko.observable("");
 
-    //fill "errors" correctly
-    self.errors = ko.validation.group(self.students());//, { deep: true, live: true });
+    self.errors = ko.validation.group(self.students);//, { deep: true, live: true });
 
     self.addNewStudent = function () {
         self.students.push(ko.validatedObservable(new StudentVM()));
@@ -64,11 +63,22 @@ var StudentsPageVM = function (vmData) {
             success: function (data) {
                 self.students(toArrayOfStudentVMs(data.Students));
                 self.availableGroups(toArrayOfGroupVMs(vmData.AvailableGroups));
-                self.message("Table refreshed successfully");
+                self.message("Students retrieved successfully");
 
                 $(".selectpicker").selectpicker("render");
             }
         });
+    };
+
+    self.increasePageSizeAndGetPage = function (increasedBy) {
+        debugger;
+        self.pageInf.PageSize += increasedBy;
+        self.getPage();
+    };
+    self.setPageInfAndGetPage = function (newPageInf) {
+        debugger;
+        self.pageInf = newPageInf;
+        self.getPage();
     };
 
     //self.exportToFile = function () {
@@ -85,7 +95,7 @@ var StudentsPageVM = function (vmData) {
             contentType: "application/json",
             success: function (data) {
                 debugger;
-                self.students.push(toArrayOfStudentVMs(data.students)[0]);
+                ko.utils.arrayPushAll(self.students, toArrayOfStudentVMs(data.students));
                 self.message(data.students[0].Name + " saved successfully");
                 
                 $(".selectpicker").selectpicker("render");
@@ -106,24 +116,15 @@ var GroupVM = function (id, name) {
 };
 
 var toArrayOfStudentVMs = function (students) {
-    debugger;
     var studentVMs = ko.utils.arrayMap(students, function (student) {
         return ko.validatedObservable(new StudentVM(student.Id, student.Name, student.Group));
     });
     return studentVMs;
-}
+};
 
 var toArrayOfGroupVMs = function (groups) {
     var groupVMs = ko.utils.arrayMap(groups, function (group) {
         return ko.validatedObservable(new GroupVM(group.Id, group.Name));
     });
     return groupVMs;
-}
-
-ko.validation.init({
-    grouping: {
-        deep: true,
-        live: true,
-        observable: false 
-    }
-});
+};

@@ -21,5 +21,15 @@ var koHelpers = {
 
         //return the original observable
         return target;
+    },
+
+    koInitValidation: function () {
+        ko.validation.init({
+            grouping: {
+                deep: true,
+                live: true,
+                observable: false
+            }
+        });
     }
 }

@@ -33,11 +33,14 @@ namespace School.DataLayer.Concrete
             if (orderBy != null)
                 query = byDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
-            if (pageInf != null && pageInf.Page > 1 && pageInf.PageSize > 0)
-            {
-                int quanToSkip = (pageInf.Page - 1) * pageInf.Page;
-                query = query.Skip(quanToSkip).Take(pageInf.PageSize);
-            }
+            if (pageInf != null)
+                if (pageInf.Page > 0 && pageInf.PageSize > 0)
+                {
+                    int quanToSkip = (pageInf.Page - 1) * pageInf.PageSize;
+                    query = query.Skip(quanToSkip).Take(pageInf.PageSize);
+                }
+                else
+                    throw new ArgumentException("Invalid PageInf", "pageInf");
 
             if (include != null)
                 query = query.Include(include);
