@@ -15,6 +15,7 @@ var StudentsPageVM = function (vmData) {
 
     self.addNewStudent = function () {
         self.students.push(ko.validatedObservable(new StudentVM()));
+        $('.selectpicker').selectpicker('render');
     };
 
     self.deleteStudent = function (student) {
@@ -48,6 +49,8 @@ var StudentsPageVM = function (vmData) {
                     //ko.mapping.fromJS(data.students(), {}, self.students);
                     self.students(toArrayOfStudentVMs(data.students));
                     self.message("All students saved in DB");
+
+                    $('.selectpicker').selectpicker('render');
                 }
             });
     };
@@ -59,8 +62,11 @@ var StudentsPageVM = function (vmData) {
             data: ko.toJSON(self.pageInf),
             contentType: "application/json",
             success: function (data) {
-                self.students(toArrayOfStudentVMs(data.students));
+                self.students(toArrayOfStudentVMs(data.Students));
+                self.availableGroups(toArrayOfGroupVMs(vmData.AvailableGroups));
                 self.message("Table refreshed successfully");
+
+                $('.selectpicker').selectpicker('render');
             }
         });
     };

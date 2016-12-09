@@ -68,10 +68,14 @@ namespace School.Web.Controllers
         public JsonResult GetPage(PageInf pageInf)
         {
             var students = _studentsLogic.GetStudents(null, pageInf, s => s.Name);
+            var availableGroups = _groupsLogic.GetGroups();
 
             var studentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(students);
+            var availableGroupVMs = AutoMapper.Mapper.Map<IEnumerable<GroupVM>>(availableGroups);
 
-            return Json(new { students = studentVMs });
+            var viewModel = new StudentsPageVM() { Students = studentVMs, AvailableGroups = availableGroupVMs, PageInf = pageInf };
+
+            return Json(viewModel);
         }
     }
 }

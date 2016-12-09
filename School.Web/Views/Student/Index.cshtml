@@ -62,16 +62,12 @@
                         @*<span data-bind='visible: Name.hasError, text: Name.validationMessage' class="text-danger">&nbsp;</span>*@
                     </td>
                     <td class="col-sm-6">
-                        <input type="text" data-bind='value: Group().Name' class="form-control col-sm-6" placeholder="name" />@*<br>*@
-                        @*<span data-bind='visible: Group().Name.hasError, text: Group().Name.validationMessage' class="text-danger">&nbsp;</span>*@
-
                         <select data-bind="options: $root.availableGroups,
-                                           optionsText: function(item) {
-                                               return item().Name() + ' (ID: ' + item().Id + ')'
-                                           },
-                                           value: $data.Group(),
+                                           optionsText: function(item) {  return item().Name() + ' (ID: ' + item().Id + ')' },
+                                           optionsValue: function(item) { return item().Id; },
+                                           value: $data.Group().Id,
                                            optionsCaption: '(select a group)'"
-                                class="selectpicker col-sm-5" data-live-search="true"></select>
+                                class="selectpicker pull-left" data-live-search="true"></select>
                     </td>
                     <td><a href='#' data-bind='click: $root.deleteStudent' class="btn btn-danger">Delete</a></td>
                 </tr>
