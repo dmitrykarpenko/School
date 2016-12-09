@@ -38,16 +38,16 @@ namespace School.Logic
                 student.Group = null;
 
             var studentsRepo = _unitOfWork.GetRepositiry<Student>();
-            var insOrUpdStudents = studentsRepo.InsertOrUpdate(students);
+            studentsRepo.InsertOrUpdate(students);
             _unitOfWork.Save();
 
-            var insOrUpdStudentsArr = insOrUpdStudents.ToArray();
+            var insOrUpdStudentsArr = students.ToArray();
 
             //set groups for updated students
             for (int i = 0; i < Math.Max(groupsArr.Length, insOrUpdStudentsArr.Length); ++i)
                 insOrUpdStudentsArr[i].Group = groupsArr[i];
 
-            return insOrUpdStudentsArr;
+            return students;
         }
 
         public virtual IEnumerable<Student> Delete(int studentId)

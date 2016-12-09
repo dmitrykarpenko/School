@@ -30,7 +30,7 @@ var StudentsPageVM = function (vmData) {
                 }
             });
         else
-            self.students.remove(student);
+            self.students.remove(function (s) { return s().Id === student.Id; });
     };
 
     self.saveAll = function () {
