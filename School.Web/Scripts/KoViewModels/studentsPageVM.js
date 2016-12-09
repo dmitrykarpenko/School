@@ -5,9 +5,8 @@ var StudentsPageVM = function (vmData) {
     var self = this;
 
     self.students = ko.observableArray(toArrayOfStudentVMs(vmData.Students));
-    self.availableGroups = ko.observableArray(vmData.AvailableGroups);
+    self.availableGroups = ko.observableArray(toArrayOfGroupVMs(vmData.AvailableGroups));
     self.pageInf = ko.observable(vmData.PageInf);
-
     //self.newStudent = ko.observable(new StudentVM());
     self.message = ko.observable("");
 
@@ -60,7 +59,7 @@ var StudentsPageVM = function (vmData) {
             data: ko.toJSON(self.pageInf),
             contentType: "application/json",
             success: function (data) {
-                self.students(data.students);
+                self.students(toArrayOfStudentVMs(data.students));
                 self.message("Table refreshed successfully");
             }
         });
@@ -102,6 +101,13 @@ var toArrayOfStudentVMs = function (students) {
         return ko.validatedObservable(new StudentVM(student.Id, student.Name, student.Group));
     });
     return studentVMs;
+}
+
+var toArrayOfGroupVMs = function (groups) {
+    var groupVMs = ko.utils.arrayMap(groups, function (group) {
+        return ko.validatedObservable(new GroupVM(group.Id, group.Name));
+    });
+    return groupVMs;
 }
 
 ko.validation.init({
