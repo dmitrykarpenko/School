@@ -7,7 +7,7 @@ var StudentsPageVM = function (vmData) {
     self.students = ko.observableArray(toArrayOfStudentVMs(vmData.Students));
     self.availableGroups = ko.observableArray(toArrayOfGroupVMs(vmData.AvailableGroups));
     self.pageInf = ko.observable(vmData.PageInf);
-    //self.newStudent = ko.observable(new StudentVM());
+    self.newStudent = ko.validatedObservable(new StudentVM());
     self.message = ko.observable("");
 
     //fill "errors" correctly
@@ -15,7 +15,7 @@ var StudentsPageVM = function (vmData) {
 
     self.addNewStudent = function () {
         self.students.push(ko.validatedObservable(new StudentVM()));
-        $('.selectpicker').selectpicker('render');
+        $(".selectpicker").selectpicker("render");
     };
 
     self.deleteStudent = function (student) {
@@ -50,7 +50,7 @@ var StudentsPageVM = function (vmData) {
                     self.students(toArrayOfStudentVMs(data.students));
                     self.message("All students saved in DB");
 
-                    $('.selectpicker').selectpicker('render');
+                    $(".selectpicker").selectpicker("render");
                 }
             });
     };
@@ -66,7 +66,7 @@ var StudentsPageVM = function (vmData) {
                 self.availableGroups(toArrayOfGroupVMs(vmData.AvailableGroups));
                 self.message("Table refreshed successfully");
 
-                $('.selectpicker').selectpicker('render');
+                $(".selectpicker").selectpicker("render");
             }
         });
     };
@@ -77,18 +77,21 @@ var StudentsPageVM = function (vmData) {
     //    saveAs(blob, "table.json");
     //}
 
-    //self.saveNewPerson = function (vmData) {
-    //    $.ajax({
-    //        url: "/Student/SaveNewStudent",
-    //        type: "POST",
-    //        data: ko.toJSON(vmData.newStudent),
-    //        contentType: "application/json",
-    //        success: function (data) {
-    //            self.students.push(data.newStudent);
-    //            self.message(data.newPerson.FirstName + " saved successfully");
-    //        }
-    //    });
-    //};
+    self.saveNewStudent = function (vmData) {
+        $.ajax({
+            url: "/Student/Save",
+            type: "POST",
+            data: ko.toJSON([vmData.newStudent]),
+            contentType: "application/json",
+            success: function (data) {
+                debugger;
+                self.students.push(toArrayOfStudentVMs(data.students)[0]);
+                self.message(data.students[0].Name + " saved successfully");
+                
+                $(".selectpicker").selectpicker("render");
+            }
+        });
+    };
 };
 
 var StudentVM = function (id, name, group) {
@@ -103,6 +106,7 @@ var GroupVM = function (id, name) {
 };
 
 var toArrayOfStudentVMs = function (students) {
+    debugger;
     var studentVMs = ko.utils.arrayMap(students, function (student) {
         return ko.validatedObservable(new StudentVM(student.Id, student.Name, student.Group));
     });
