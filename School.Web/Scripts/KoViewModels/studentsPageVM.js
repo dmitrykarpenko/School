@@ -1,7 +1,6 @@
 "use strict";
 
 var StudentsPageVM = function (vmData) {
-
     var self = this;
 
     self.students = ko.observableArray(toArrayOfStudentVMs(vmData.Students));
@@ -70,13 +69,11 @@ var StudentsPageVM = function (vmData) {
         });
     };
 
-    self.increasePageSizeAndGetPage = function (increasedBy) {
-        debugger;
-        self.pageInf.PageSize += increasedBy;
+    self.increasePageSizeAndGetPage = function (increaseBy) {
+        self.pageInf.PageSize += increaseBy;
         self.getPage();
     };
     self.setPageInfAndGetPage = function (newPageInf) {
-        debugger;
         self.pageInf = newPageInf;
         self.getPage();
     };
@@ -102,29 +99,4 @@ var StudentsPageVM = function (vmData) {
             }
         });
     };
-};
-
-var StudentVM = function (id, name, group) {
-    this.Id = id || 0;
-    this.Name = ko.observable(name || "").extend({ required: true });//"Please enter student's a name" });
-    this.Group = ko.observable(group ? new GroupVM(group.Id, group.Name) : new GroupVM());
-};
-
-var GroupVM = function (id, name) {
-    this.Id = id || null;
-    this.Name = ko.observable(name || "");//.extend({ required: true });//"Please enter group's name" });
-};
-
-var toArrayOfStudentVMs = function (students) {
-    var studentVMs = ko.utils.arrayMap(students, function (student) {
-        return ko.validatedObservable(new StudentVM(student.Id, student.Name, student.Group));
-    });
-    return studentVMs;
-};
-
-var toArrayOfGroupVMs = function (groups) {
-    var groupVMs = ko.utils.arrayMap(groups, function (group) {
-        return ko.validatedObservable(new GroupVM(group.Id, group.Name));
-    });
-    return groupVMs;
 };
