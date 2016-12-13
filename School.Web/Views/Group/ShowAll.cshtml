@@ -38,13 +38,15 @@
                 We have <span data-bind='text: groups().length'>&nbsp;</span> group(s) shown:
             </div>
             <div class="col-md-1">
-                <!-- Trigger the modal with a button -->
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addGroupModal">Add new</button>
+                @*Trigger the modal with a button. Using jQuery: onclick="$('#addGroupModal').modal('toggle')"*@
+                <button type="button" class="btn btn-info" data-bind="click: newGroup.popup.toggle">Add new</button>
             </div>
         </div>
-        <div data-bind='visible: message().length > 0' class="alert alert-success alert-dismissable fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-            <span data-bind='text: message'>&nbsp;</span>
+        <div class="row">
+            <div data-bind='visible: message().length > 0' class="alert alert-success alert-dismissable fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                <span data-bind='text: message'>&nbsp;</span>
+            </div>
         </div>
         <table data-bind='visible: groups().length > 0' class="table table-hover table-striped table-condensed">
             <thead>
@@ -73,12 +75,13 @@
         </div>
     </form>
 </div>
+
 <!-- Modal -->
-<div class="modal fade" id="addGroupModal" role="dialog">
+<div class="css-modal" data-bind="css: { 'css-show': newGroup.popup }" @*id="addGroupModal"*@ role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-bind="click: newGroup.popup.toggle">&times;</button>
                 <h4 class="modal-title">Add new group</h4>
             </div>
             <div class="modal-body">
@@ -86,7 +89,7 @@
                     <div class="form-group row">
                         <label class="control-label col-sm-2" for="newGroupName">Name:</label>
                         <div class="col-sm-10">
-                            <input type="text" data-bind="value: newGroup().Name" class="form-control" id="newGroupName" placeholder="enter name" />
+                            <input type="text" data-bind="value: newGroup.Name" class="form-control" id="newGroupName" placeholder="enter name" />
                         </div>
                     </div>
                     <div class="col-md-7 col-md-offset-3">
@@ -96,8 +99,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-bind="click: newGroup.popup.toggle">Close</button>
             </div>
         </div>
     </div>
 </div>
+<div class="css-overlay" data-bind="click: newGroup.popup.toggle"></div>

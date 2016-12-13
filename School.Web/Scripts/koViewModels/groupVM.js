@@ -6,6 +6,22 @@ var GroupVM = function (id, name) {
     self.Id = id || null;
     self.Name = ko.isComputed(name) ? name : ko.observable(name || "");
     self.Name.extend({ required: true });//"Please enter group's name" });
+    self.errors = ko.validation.group(self);
+
+    self.save = function (vmData, onSuccess, parentVM) {
+        self.errors.showAllMessages();
+        var isValid = self.errors().length == 0;
+        if (isValid)
+            $.ajax({
+                url: "/Group/Save",
+                type: "POST",
+                data: ko.toJSON([vmData]),
+                contentType: "application/json",
+                success: function (data) {
+                    onSuccess(data, parentVM);
+                }
+            });
+    };
 };
 
 var toArrayOfGroupVMs = function (groups, getGroupById) {

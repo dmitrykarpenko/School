@@ -8,8 +8,14 @@ var GroupsPageVM = function (vmData) {
 
     self.pageInf = vmData.PageInf;
 
-    self.newGroup = ko.observable(createDefaultGroupVM());
-    self.newGroup.errors = ko.validation.group(self.newGroup);
+    self.newGroup = createDefaultGroupVM();
+    self.newGroup.popup = ko.observable(null);
+    self.newGroup.popup.toggle = function () {
+        var pop = self.newGroup.popup;
+        pop(pop() ? null : new PopupVM(function () {
+            self.closePopu();
+        }));
+    };
 
     self.message = ko.observable("");
 
@@ -89,24 +95,23 @@ var GroupsPageVM = function (vmData) {
     };
 
     self.saveNewGroup = function (vmData) {
-        self.newGroup.errors.showAllMessages();
-        var isValid = self.newGroup.errors().length == 0;
-        if (isValid)
-            $.ajax({
-                url: "/Group/Save",
-                type: "POST",
-                data: ko.toJSON([vmData.newGroup]),
-                contentType: "application/json",
-                success: function (data) {
-                    ko.utils.arrayPushAll(self.groups, toArrayOfGroupVMs(data.groups));
-                    self.message(data.groups[0].Name + " saved successfully");
-                    self.newGroup(createDefaultGroupVM());
+        var onSuccess = function (data, selfVM) {
+            ko.utils.arrayPushAll(selfVM.groups, toArrayOfGroupVMs(data.groups));
+            selfVM.message(data.groups[0].Name + " saved successfully");
+            selfVM.newGroup(createDefaultGroupVM());
 
-                    ++self.pageInf.PageSize;
-
-                    $(".selectpicker").selectpicker("render");
-                }
-            });
+            ++selfVM.pageInf.PageSize;
+        };
+        self.newGroup.save(self.newGroup, onSuccess, self)
     };
 };
 
+var PopupVM = function (id, success) {
+    var self = this;
+
+    self.Id = id || null;
+
+    self.save = function () {
+
+    }
+};
