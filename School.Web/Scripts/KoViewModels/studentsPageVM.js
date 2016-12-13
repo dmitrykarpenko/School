@@ -17,7 +17,7 @@ var StudentsPageVM = function (vmData) {
 
     self.message = ko.observable("");
 
-    function createDefaultStudentVM(student) {
+    function createDefaultStudentVM() {
         return new StudentVM(null, null, null, self.availableGroups);
     };
 
