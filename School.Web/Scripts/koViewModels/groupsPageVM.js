@@ -8,14 +8,18 @@ var GroupsPageVM = function (vmData) {
 
     self.pageInf = vmData.PageInf;
 
-    self.newGroup = createDefaultGroupVM();
+    self.newGroup = ko.observable(createDefaultGroupVM());
     self.newGroup.popup = ko.observable(null);
     self.newGroup.popup.toggle = function () {
         var pop = self.newGroup.popup;
-        pop(pop() ? null : new PopupVM(function () {
-            self.closePopu();
-        }));
+        pop(pop() ? null : new PopupVM());
+
+        //function () {
+        //    self.closePopu();
+        //}
     };
+
+    //self.newGroupPopup = new NewGroupPopupVM();
 
     self.message = ko.observable("");
 
@@ -94,24 +98,40 @@ var GroupsPageVM = function (vmData) {
         self.getPage();
     };
 
-    self.saveNewGroup = function (vmData) {
+    self.saveNewGroup = function () {
         var onSuccess = function (data, selfVM) {
             ko.utils.arrayPushAll(selfVM.groups, toArrayOfGroupVMs(data.groups));
             selfVM.message(data.groups[0].Name + " saved successfully");
             selfVM.newGroup(createDefaultGroupVM());
 
             ++selfVM.pageInf.PageSize;
+
+            self.newGroup.popup.toggle();
         };
-        self.newGroup.save(self.newGroup, onSuccess, self)
+        self.newGroup().save(onSuccess, self)
     };
 };
 
-var PopupVM = function (id, success) {
+
+var PopupVM = function () {
     var self = this;
 
-    self.Id = id || null;
-
-    self.save = function () {
-
-    }
+    self.newGroup = new GroupVM();
 };
+
+//var NewGroupPopupVM = function (onSuccessfulSaving, parentVM) {
+//    var self = this;
+
+//    self.newGroup = new GroupVM();
+
+//    self.save = function () {
+//        var onSuccess = function (data, selfVM) {
+//            ko.utils.arrayPushAll(selfVM.groups, toArrayOfGroupVMs(data.groups));
+//            selfVM.message(data.groups[0].Name + " saved successfully");
+//            selfVM.newGroup(createDefaultGroupVM());
+
+//            ++selfVM.pageInf.PageSize;
+//        };
+//        self.newGroup.save(self.newGroup, onSuccess, parentVM);
+//    }
+//};
