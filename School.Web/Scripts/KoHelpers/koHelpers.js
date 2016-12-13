@@ -31,5 +31,12 @@ var koHelpers = {
                 observable: false
             }
         });
+    },
+
+    increment: function (observable) {
+        observable(observable() + 1);
+    },
+    decrement: function (observable) {
+        observable(observable() - 1);
     }
 }

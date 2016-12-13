@@ -48,6 +48,12 @@ namespace School.DataLayer.Concrete
             return query.ToList();
         }
 
+        public int Count(Expression<Func<T, bool>> filter = null)
+        {
+            int count = filter != null ? _dbSet.Count(filter) : _dbSet.Count();
+            return count;
+        }
+
         //public virtual void Insert(T entity)
         //{
         //    _dbSet.Add(entity);

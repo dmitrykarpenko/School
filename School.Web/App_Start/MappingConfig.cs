@@ -1,4 +1,5 @@
-﻿using School.Model.Entities;
+﻿using School.Logic.DTOs;
+using School.Model.Entities;
 using School.Web.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,12 @@ namespace School.Web
                       .ForMember(dest => dest.GroupId,
                                  opt => opt.MapFrom(src => src.Group != null & src.Group.Id != 0 ?
                                                     (int?)src.Group.Id : null));
+
+                config.CreateMap<Group, GroupDTO>();
+                config.CreateMap<Student, StudentDTO>();
+
+                config.CreateMap<GroupDTO, GroupVM>();
+                config.CreateMap<StudentDTO, StudentVM>();
             });
         }
     }

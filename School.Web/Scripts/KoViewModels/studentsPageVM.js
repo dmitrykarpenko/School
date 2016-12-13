@@ -13,6 +13,8 @@ var StudentsPageVM = function (vmData) {
     self.newStudent = ko.observable(createDefaultStudentVM());
     self.newStudent.errors = ko.validation.group(self.newStudent);
 
+    self.countOfAllStudents = ko.observable(vmData.CountOfAllStudents);
+
     self.message = ko.observable("");
 
     function createDefaultStudentVM(student) {
@@ -34,7 +36,9 @@ var StudentsPageVM = function (vmData) {
                 success: function () {
                     self.students.remove(function (s) { return s.Id === student.Id; });
                     self.message(student.Name() + " removed");
+
                     --self.pageInf.PageSize;
+                    koHelpers.decrement(self.countOfAllStudents);
                 }
             });
         else
@@ -71,6 +75,7 @@ var StudentsPageVM = function (vmData) {
             success: function (data) {
                 self.students(toArrayOfStudentVMs(data.Students, self.availableGroups));
                 self.availableGroups = toArrayOfGroupVMs(data.AvailableGroups);
+                self.countOfAllStudents(data.CountOfAllStudents);
                 self.message("Students retrieved successfully");
 
                 $(".selectpicker").selectpicker("render");
@@ -106,6 +111,9 @@ var StudentsPageVM = function (vmData) {
                     ko.utils.arrayPushAll(self.students, toArrayOfStudentVMs(data.students, self.availableGroups));
                     self.message(data.students[0].Name + " saved successfully");
                     self.newStudent(createDefaultStudentVM());
+
+                    ++self.pageInf.PageSize;
+                    koHelpers.increment(self.countOfAllStudents);
 
                     $(".selectpicker").selectpicker("render");
                 }
