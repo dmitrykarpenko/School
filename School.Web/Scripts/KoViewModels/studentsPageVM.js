@@ -23,6 +23,10 @@ var StudentsPageVM = function (vmData) {
 
     self.addNewStudent = function () {
         self.students.push(createDefaultStudentVM());
+
+        ++self.pageInf.PageSize;
+        koHelpers.increment(self.countOfAllStudents);
+
         $(".selectpicker").selectpicker("render");
     };
 
