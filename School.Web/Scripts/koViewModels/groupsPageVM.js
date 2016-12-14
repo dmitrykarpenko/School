@@ -8,12 +8,7 @@ var GroupsPageVM = function (vmData) {
 
     self.pageInf = vmData.PageInf;
   
-    //self.newGroup = ko.observable(createDefaultGroupVM());
     self.newGroupPopup = createDefaultNewGroupPopupVM();
-    //self.newGroupPopup.toggle = function () {
-    //    var pop = self.newGroupPopup;
-    //    pop(pop() ? null : createDefaultNewGroupPopupVM());
-    //};
     function createDefaultNewGroupPopupVM() {
         return new NewGroupPopupVM(createDefaultGroupVM(), onSuccessfulNewGroupSaving, self)
     };
@@ -103,19 +98,6 @@ var GroupsPageVM = function (vmData) {
         self.pageInf = newPageInf;
         self.getPage();
     };
-
-    //self.saveNewGroup = function () {
-    //    var onSuccess = function (data, selfVMPar) {
-    //        ko.utils.arrayPushAll(selfVMPar.groups, toArrayOfGroupVMs(data.groups));
-    //        selfVMPar.message(data.groups[0].Name + " saved successfully");
-    //        selfVMPar.newGroup(createDefaultGroupVM());
-
-    //        ++selfVMPar.pageInf.PageSize;
-
-    //        selfVMPar.newGroup.popup.toggle();
-    //    };
-    //    self.newGroup().save(onSuccess, self)
-    //};
 };
 
 var NewGroupPopupVM = function (newGroupInitVal, onSuccessfulSaving, parentVM) {
