@@ -36,7 +36,7 @@ var GroupsPageVM = function (vmData) {
     };
 
     self.deleteGroup = function (group) {
-        if (group.Id !== 0)
+        if (group.Id)
             $.ajax({
                 url: "/Group/Delete",
                 type: "POST",
@@ -99,14 +99,14 @@ var GroupsPageVM = function (vmData) {
     };
 
     self.saveNewGroup = function () {
-        var onSuccess = function (data, selfVM) {
-            ko.utils.arrayPushAll(selfVM.groups, toArrayOfGroupVMs(data.groups));
-            selfVM.message(data.groups[0].Name + " saved successfully");
-            selfVM.newGroup(createDefaultGroupVM());
+        var onSuccess = function (data, selfVMPar) {
+            ko.utils.arrayPushAll(selfVMPar.groups, toArrayOfGroupVMs(data.groups));
+            selfVMPar.message(data.groups[0].Name + " saved successfully");
+            selfVMPar.newGroup(createDefaultGroupVM());
 
-            ++selfVM.pageInf.PageSize;
+            ++selfVMPar.pageInf.PageSize;
 
-            self.newGroup.popup.toggle();
+            selfVMPar.newGroup.popup.toggle();
         };
         self.newGroup().save(onSuccess, self)
     };

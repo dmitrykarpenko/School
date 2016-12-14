@@ -30,14 +30,14 @@
 </div>
 
 <div class="row">
-    <form class="col-md-offset-2 col-md-8">
+    <form class="col-md-offset-3 col-md-6">
         <h2>All groups</h2>
         <div class="row">
-            <div class="alert alert-info alert-dismissable fade in col-md-11">
+            <div class="alert alert-info alert-dismissable fade in col-md-10">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
                 We have <span data-bind='text: groups().length'>&nbsp;</span> group(s) shown:
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 @*Trigger the modal with a button. Using jQuery: onclick="$('#addGroupModal').modal('toggle')"*@
                 <button type="button" class="btn btn-info" data-bind="click: newGroup.popup.toggle">Add new</button>
             </div>
@@ -65,7 +65,7 @@
             </tbody>
         </table>
 
-        <div class="col-md-9 col-md-offset-2">
+        <div class="col-md-offset-1 col-md-11">
             <button class="btn btn-default" data-bind='click: increasePageSizeAndGetPage.bind($data, 10)'>
                 <span class="glyphicon glyphicon-chevron-down"></span> Get ten more
             </button>
