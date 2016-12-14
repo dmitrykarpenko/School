@@ -10,10 +10,10 @@ var StudentVM = function (id, name, groupId, availableGroups) {
     self.Group = ko.computed(function () {
         if (!self.GroupId() || !availableGroups || availableGroups.length == 0)
             return null;
-        var avGrpsById = $.grep(availableGroups, function (ag) {
+        var avGroupsById = $.grep(availableGroups, function (ag) {
             return ag.Id == self.GroupId();
         });
-        return avGrpsById[0] || null;
+        return avGroupsById[0] || null;
     }, self);
     //self.Group = ko.observable(group ? new GroupVM(group.Id, group.Name) : new GroupVM());
 };

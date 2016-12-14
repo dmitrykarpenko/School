@@ -13,7 +13,7 @@ namespace School.Web.Controllers
     public class GroupController : Controller
     {
         private GroupsLogic _groupsLogic;
-        public GroupController(StudentsLogic studentsLogic, GroupsLogic groupsLogic)
+        public GroupController(GroupsLogic groupsLogic)
         {
             _groupsLogic = groupsLogic;
         }

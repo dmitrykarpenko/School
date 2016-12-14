@@ -17,6 +17,8 @@ namespace School.Web
             {
                 config.CreateMap<Group, GroupVM>();
                 config.CreateMap<GroupVM, Group>();
+                config.CreateMap<Course, CourseVM>();
+                config.CreateMap<CourseVM, Course>();
                 config.CreateMap<Student, StudentVM>();
                 config.CreateMap<StudentVM, Student>()
                       .ForMember(dest => dest.GroupId,
@@ -24,9 +26,11 @@ namespace School.Web
                                                     (int?)src.Group.Id : null));
 
                 config.CreateMap<Group, GroupDTO>();
+                config.CreateMap<Course, CourseDTO>();
                 config.CreateMap<Student, StudentDTO>();
 
                 config.CreateMap<GroupDTO, GroupVM>();
+                config.CreateMap<CourseDTO, CourseVM>();
                 config.CreateMap<StudentDTO, StudentVM>();
             });
         }

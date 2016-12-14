@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 namespace School.Web.ViewModels
 {
-    public class GroupsPageVM
+    public class CoursesPageVM
     {
-        public IEnumerable<GroupVM> Groups { get; set; }
+        public IEnumerable<CourseVM> Courses { get; set; }
         public PageInf PageInf { get; set; }
-        //public int CountOfAllGroups { get; set; }
     }
 }

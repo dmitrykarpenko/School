@@ -54,6 +54,8 @@
     <Compile Include="Concrete\BaseEFRepositiry.cs" />
     <Compile Include="Concrete\EFSchoolContext.cs" />
     <Compile Include="Concrete\EFUnitOfWork.cs" />
+    <Compile Include="Configurations\CoursesConfiguration.cs" />
+    <Compile Include="Configurations\GroupsConfiguration.cs" />
     <Compile Include="Configurations\StudentsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
