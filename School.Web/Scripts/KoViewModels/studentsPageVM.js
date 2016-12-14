@@ -45,8 +45,13 @@ var StudentsPageVM = function (vmData) {
                     koHelpers.decrement(self.countOfAllStudents);
                 }
             });
-        else
+        else {
             self.students.remove(function (s) { return s.Id === student.Id; });
+
+            --self.pageInf.PageSize;
+            koHelpers.decrement(self.countOfAllStudents);
+        }
+            
     };
 
     self.saveAll = function () {
