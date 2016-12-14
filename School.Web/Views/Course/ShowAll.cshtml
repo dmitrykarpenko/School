@@ -38,7 +38,7 @@
                 We have <span data-bind='text: courses().length'>&nbsp;</span> course(s) shown:
             </div>
             <div class="col-md-2">
-                <button type="button" class="btn btn-info" data-bind="click: newCoursePopup.toggle">Add new</button>
+                @Html.ActionLink("Add new", "AddNew", "Course", null, new { @class = "btn btn-info" })
             </div>
         </div>
         <div class="row">
@@ -74,33 +74,3 @@
         </div>
     </form>
 </div>
-
-<!-- Modal -->
-<div class="css-modal" data-bind="css: { 'css-show': newCoursePopup.visible }" @*id="addCourseModal"*@ role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-bind="click: newCoursePopup.toggle">&times;</button>
-                <h4 class="modal-title">Add new course</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group row">
-                        <label class="control-label col-sm-2" for="newCourseName">Name:</label>
-                        <div class="col-sm-10">
-                            <input type="text" data-bind="value: newCoursePopup.newCourse().Name" class="form-control" id="newCourseName" placeholder="enter name" />
-                        </div>
-                    </div>
-                    <div class="col-md-7 col-md-offset-3">
-                        @*enable: newCoursePopup.newCourse.isValid*@
-                        <button class="btn btn-warning" data-bind="click: newCoursePopup.save" type="submit">Save new course</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bind="click: newCoursePopup.toggle">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="css-overlay" data-bind="click: newCoursePopup.toggle"></div>

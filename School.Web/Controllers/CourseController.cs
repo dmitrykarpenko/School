@@ -35,6 +35,21 @@ namespace School.Web.Controllers
             return View(viewModel);
         }
 
+        public ActionResult AddNew()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddNew(CourseVM courseVM)
+        {
+            var course = AutoMapper.Mapper.Map<Course>(courseVM);
+
+            _coursesLogic.InsertOrUpdate(new List<Course>() { course });
+
+            return RedirectToAction("ShowAll");
+        }
+
         public JsonResult Save(IEnumerable<CourseVM> courseVMs)
         {
             var courses = AutoMapper.Mapper.Map<IEnumerable<Course>>(courseVMs);

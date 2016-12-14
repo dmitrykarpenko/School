@@ -333,6 +333,7 @@
     <Content Include="Scripts\knockout.validation.min.js.map" />
     <Content Include="Views\Group\ShowAll.cshtml" />
     <Content Include="Views\Course\ShowAll.cshtml" />
+    <Content Include="Views\Course\AddNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
