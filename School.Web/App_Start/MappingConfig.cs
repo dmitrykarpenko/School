@@ -17,8 +17,18 @@ namespace School.Web
             {
                 config.CreateMap<Group, GroupVM>();
                 config.CreateMap<GroupVM, Group>();
-                config.CreateMap<Course, CourseVM>();
-                config.CreateMap<CourseVM, Course>();
+
+                //todo: consider possible transitivity via GroupVM
+                config.CreateMap<Group, SelectableGroupVM>();
+                config.CreateMap<SelectableGroupVM, Group>();
+
+                config.CreateMap<Course, CourseVM>()
+                      .ForMember(dest => dest.SelectableGroups,
+                                 opt => opt.MapFrom(src => src.Groups));
+                config.CreateMap<CourseVM, Course>()
+                      .ForMember(dest => dest.Groups,
+                                 opt => opt.MapFrom(src => src.SelectableGroups.Where(sg => sg.Selected)));
+
                 config.CreateMap<Student, StudentVM>();
                 config.CreateMap<StudentVM, Student>()
                       .ForMember(dest => dest.GroupId,

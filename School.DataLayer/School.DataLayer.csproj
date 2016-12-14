@@ -57,6 +57,7 @@
     <Compile Include="Configurations\CoursesConfiguration.cs" />
     <Compile Include="Configurations\GroupsConfiguration.cs" />
     <Compile Include="Configurations\StudentsConfiguration.cs" />
+    <Compile Include="Helpers\ReflectionHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

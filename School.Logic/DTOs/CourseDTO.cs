@@ -8,6 +8,6 @@ namespace School.Logic.DTOs
 {
     public class CourseDTO : BaseDTO
     {
-        
+        public ICollection<GroupDTO> Groups { get; set; }
     }
 }

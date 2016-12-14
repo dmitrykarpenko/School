@@ -13,9 +13,11 @@ namespace School.Web.Controllers
     public class CourseController : Controller
     {
         private CoursesLogic _coursesLogic;
-        public CourseController(CoursesLogic coursesLogic)
+        private GroupsLogic _groupsLogic;
+        public CourseController(CoursesLogic coursesLogic, GroupsLogic groupsLogic)
         {
             _coursesLogic = coursesLogic;
+            _groupsLogic = groupsLogic;
         }
 
         public ActionResult ShowAll()
@@ -37,7 +39,11 @@ namespace School.Web.Controllers
 
         public ActionResult AddNew()
         {
-            return View();
+            var availableGroups = _groupsLogic.GetGroups();
+            IEnumerable<SelectableGroupVM> availableSelectableGroupVMs = AutoMapper.Mapper.Map<IEnumerable<SelectableGroupVM>>(availableGroups);
+
+            var vm = new CourseVM() { SelectableGroups = availableSelectableGroupVMs };
+            return View(vm);
         }
 
         [HttpPost]
