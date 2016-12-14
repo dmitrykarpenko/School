@@ -38,8 +38,7 @@
                 We have <span data-bind='text: groups().length'>&nbsp;</span> group(s) shown:
             </div>
             <div class="col-md-2">
-                @*Trigger the modal with a button. Using jQuery: onclick="$('#addGroupModal').modal('toggle')"*@
-                <button type="button" class="btn btn-info" data-bind="click: newGroup.popup.toggle">Add new</button>
+                <button type="button" class="btn btn-info" data-bind="click: newGroupPopup.toggle">Add new</button>
             </div>
         </div>
         <div class="row">
@@ -77,11 +76,11 @@
 </div>
 
 <!-- Modal -->
-<div class="css-modal" data-bind="css: { 'css-show': newGroup.popup }" @*id="addGroupModal"*@ role="dialog">
+<div class="css-modal" data-bind="css: { 'css-show': newGroupPopup.visible }" @*id="addGroupModal"*@ role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-bind="click: newGroup.popup.toggle">&times;</button>
+                <button type="button" class="close" data-bind="click: newGroupPopup.toggle">&times;</button>
                 <h4 class="modal-title">Add new group</h4>
             </div>
             <div class="modal-body">
@@ -89,19 +88,19 @@
                     <div class="form-group row">
                         <label class="control-label col-sm-2" for="newGroupName">Name:</label>
                         <div class="col-sm-10">
-                            <input type="text" data-bind="value: newGroup().Name" class="form-control" id="newGroupName" placeholder="enter name" />
+                            <input type="text" data-bind="value: newGroupPopup.newGroup().Name" class="form-control" id="newGroupName" placeholder="enter name" />
                         </div>
                     </div>
                     <div class="col-md-7 col-md-offset-3">
-                        @*enable: newGroup.isValid*@
-                        <button class="btn btn-warning" data-bind="click: saveNewGroup" type="submit">Save new group</button>
+                        @*enable: newGroupPopup.newGroup.isValid*@
+                        <button class="btn btn-warning" data-bind="click: newGroupPopup.save" type="submit">Save new group</button>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-bind="click: newGroup.popup.toggle">Close</button>
+                <button type="button" class="btn btn-default" data-bind="click: newGroupPopup.toggle">Close</button>
             </div>
         </div>
     </div>
 </div>
-<div class="css-overlay" data-bind="click: newGroup.popup.toggle"></div>
+<div class="css-overlay" data-bind="click: newGroupPopup.toggle"></div>

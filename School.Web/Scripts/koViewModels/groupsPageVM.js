@@ -7,25 +7,31 @@ var GroupsPageVM = function (vmData) {
     self.groups.errors = ko.validation.group(self.groups);//, { deep: true, live: true });
 
     self.pageInf = vmData.PageInf;
-
-    self.newGroup = ko.observable(createDefaultGroupVM());
-    self.newGroup.popup = ko.observable(null);
-    self.newGroup.popup.toggle = function () {
-        var pop = self.newGroup.popup;
-        pop(pop() ? null : new PopupVM());
-
-        //function () {
-        //    self.closePopu();
-        //}
+  
+    //self.newGroup = ko.observable(createDefaultGroupVM());
+    self.newGroupPopup = createDefaultNewGroupPopupVM();
+    //self.newGroupPopup.toggle = function () {
+    //    var pop = self.newGroupPopup;
+    //    pop(pop() ? null : createDefaultNewGroupPopupVM());
+    //};
+    function createDefaultNewGroupPopupVM() {
+        return new NewGroupPopupVM(createDefaultGroupVM(), onSuccessfulNewGroupSaving, self)
     };
+    function onSuccessfulNewGroupSaving(data, selfVMPar) {
+        ko.utils.arrayPushAll(selfVMPar.groups, toArrayOfGroupVMs(data.groups));
+        selfVMPar.message(data.groups[0].Name + " saved successfully");
+        //newGroupPopup.newGroup is observable now
+        selfVMPar.newGroupPopup.newGroup(createDefaultGroupVM());
 
-    //self.newGroupPopup = new NewGroupPopupVM();
+        ++selfVMPar.pageInf.PageSize;
 
-    self.message = ko.observable("");
-
+        selfVMPar.newGroupPopup.toggle();
+    };
     function createDefaultGroupVM() {
         return new GroupVM();
     };
+
+    self.message = ko.observable("");
 
     self.addNewGroup = function () {
         self.groups.push(createDefaultGroupVM());
@@ -98,40 +104,32 @@ var GroupsPageVM = function (vmData) {
         self.getPage();
     };
 
-    self.saveNewGroup = function () {
-        var onSuccess = function (data, selfVMPar) {
-            ko.utils.arrayPushAll(selfVMPar.groups, toArrayOfGroupVMs(data.groups));
-            selfVMPar.message(data.groups[0].Name + " saved successfully");
-            selfVMPar.newGroup(createDefaultGroupVM());
+    //self.saveNewGroup = function () {
+    //    var onSuccess = function (data, selfVMPar) {
+    //        ko.utils.arrayPushAll(selfVMPar.groups, toArrayOfGroupVMs(data.groups));
+    //        selfVMPar.message(data.groups[0].Name + " saved successfully");
+    //        selfVMPar.newGroup(createDefaultGroupVM());
 
-            ++selfVMPar.pageInf.PageSize;
+    //        ++selfVMPar.pageInf.PageSize;
 
-            selfVMPar.newGroup.popup.toggle();
-        };
-        self.newGroup().save(onSuccess, self)
-    };
+    //        selfVMPar.newGroup.popup.toggle();
+    //    };
+    //    self.newGroup().save(onSuccess, self)
+    //};
 };
 
-
-var PopupVM = function () {
+var NewGroupPopupVM = function (newGroupInitVal, onSuccessfulSaving, parentVM) {
     var self = this;
 
-    self.newGroup = new GroupVM();
+    self.newGroup = ko.observable(newGroupInitVal || new GroupVM());
+    self.visible = ko.observable(false);
+
+    self.toggle = function () {
+        var vis = self.visible;
+        vis(vis() ? false : true);
+    }
+
+    self.save = function () {
+        self.newGroup().save(onSuccessfulSaving, parentVM);
+    }
 };
-
-//var NewGroupPopupVM = function (onSuccessfulSaving, parentVM) {
-//    var self = this;
-
-//    self.newGroup = new GroupVM();
-
-//    self.save = function () {
-//        var onSuccess = function (data, selfVM) {
-//            ko.utils.arrayPushAll(selfVM.groups, toArrayOfGroupVMs(data.groups));
-//            selfVM.message(data.groups[0].Name + " saved successfully");
-//            selfVM.newGroup(createDefaultGroupVM());
-
-//            ++selfVM.pageInf.PageSize;
-//        };
-//        self.newGroup.save(self.newGroup, onSuccess, parentVM);
-//    }
-//};
