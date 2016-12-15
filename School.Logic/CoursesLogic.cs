@@ -24,7 +24,7 @@ namespace School.Logic
         {
             var coursesRepo = _unitOfWork.GetRepositiry<Course>();
 
-            var courses = coursesRepo.Get(filter, pageInf, null, orderBy, byDesc);
+            var courses = coursesRepo.Get(filter, pageInf, c => c.Groups, orderBy, byDesc);
 
             return courses;
         }

@@ -80,6 +80,8 @@ namespace School.DataLayer.Concrete
 
                 _dbSet.Add(entity);
                 _context.Entry(entity).State = entity.Id == 0 ? EntityState.Added : EntityState.Modified;
+
+                //todo: consider setting all subentities state to added, modified or unchanged by Id
             }
 
             return ret;

@@ -8,6 +8,10 @@ var CourseVM = function (id, name) {
     self.Name.extend({ required: true });//"Please enter course's name" });
     self.errors = ko.validation.group(self, { deep: false });
 
+    self.editUrl = function () {
+        return "/Course/AddNewOrEdit/" + (self.Id != 0 ? self.Id : "");
+    };
+
     self.save = function (onSuccess, parentVM) {
         self.errors.showAllMessages();
         var isValid = self.errors().length == 0;

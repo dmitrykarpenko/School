@@ -38,7 +38,7 @@
                 We have <span data-bind='text: courses().length'>&nbsp;</span> course(s) shown:
             </div>
             <div class="col-md-2">
-                @Html.ActionLink("Add new", "AddNew", "Course", null, new { @class = "btn btn-info" })
+                @Html.ActionLink("Add new", "AddNewOrEdit", "Course", null, new { @class = "btn btn-info" })
             </div>
         </div>
         <div class="row">
@@ -56,10 +56,11 @@
             </thead>
             <tbody data-bind='foreach: courses'>
                 <tr class="form-group">
-                    <td class="col-sm-11">
+                    <td class="col-md-8">
                         <input type="text" data-bind='value: Name' class="form-control" placeholder="name" />
                     </td>
-                    <td><a href='#' data-bind='click: $root.deleteCourse' class="btn btn-danger">Delete</a></td>
+                    <td class="col-md-2"><a data-bind="attr: { href: editUrl() }" class="btn btn-info">Edit</a></td>
+                    <td class="col-md-2"><a href='#' data-bind='click: $root.deleteCourse' class="btn btn-danger">Delete</a></td>
                 </tr>
             </tbody>
         </table>

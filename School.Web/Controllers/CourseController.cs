@@ -37,17 +37,43 @@ namespace School.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult AddNew()
+        public ActionResult AddNewOrEdit(int? id)
         {
-            var availableGroups = _groupsLogic.GetGroups();
-            IEnumerable<SelectableGroupVM> availableSelectableGroupVMs = AutoMapper.Mapper.Map<IEnumerable<SelectableGroupVM>>(availableGroups);
+            CourseVM vm = null;
+            IEnumerable<Group> notSelectedGroups = null;
 
-            var vm = new CourseVM() { SelectableGroups = availableSelectableGroupVMs };
+            if (id != null)
+            {
+                int idVal = id.GetValueOrDefault();
+                var course = _coursesLogic.GetCourses(c => c.Id == idVal).FirstOrDefault();
+                if (course != null)
+                {
+                    vm = AutoMapper.Mapper.Map<CourseVM>(course);
+                    if (vm.SelectableGroups != null && vm.SelectableGroups.Any())
+                    {
+                        foreach (var sg in vm.SelectableGroups)
+                            sg.Selected = true;
+
+                        var selectedGroupIds = vm.SelectableGroups.Select(sg => sg.Id).ToList();
+                        notSelectedGroups = _groupsLogic.GetGroups(g => !selectedGroupIds.Contains(g.Id));
+                    }
+                }
+            }
+
+            if (vm == null)
+                vm = new CourseVM() { SelectableGroups = new List<SelectableGroupVM>() };
+
+            if (notSelectedGroups == null)
+                notSelectedGroups = _groupsLogic.GetGroups();
+
+            ((List<SelectableGroupVM>)vm.SelectableGroups)
+                .AddRange(AutoMapper.Mapper.Map<IEnumerable<SelectableGroupVM>>(notSelectedGroups));
+
             return View(vm);
         }
 
         [HttpPost]
-        public ActionResult AddNew(CourseVM courseVM)
+        public ActionResult AddNewOrEdit(CourseVM courseVM)
         {
             var course = AutoMapper.Mapper.Map<Course>(courseVM);
 
