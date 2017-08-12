@@ -31,13 +31,19 @@ namespace School.Web.Controllers
         {
             var pageInf = new PageInf() { Page = 1, PageSize = 10 };
 
-            var students = _studentsLogic.GetStudents(null, pageInf, s => s.Name);
+            var studentsFeed = _studentsLogic.GetStudentsFeed(null, pageInf, s => s.Name);
             var availableGroups = _groupsLogic.GetGroups();
 
-            var studentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(students);
+            var studentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(studentsFeed.Collection);
             var availableGroupVMs = AutoMapper.Mapper.Map<IEnumerable<GroupVM>>(availableGroups);
 
-            var viewModel = new StudentsPageVM() { Students = studentVMs, AvailableGroups = availableGroupVMs, PageInf = pageInf };
+            var viewModel = new StudentsPageVM()
+            {
+                Students = studentVMs,
+                AvailableGroups = availableGroupVMs,
+                PageInf = pageInf,
+                CountOfAllStudents = studentsFeed.Count
+            };
 
             return View(viewModel);
         }
@@ -67,13 +73,20 @@ namespace School.Web.Controllers
 
         public JsonResult GetPage(PageInf pageInf)
         {
-            var students = _studentsLogic.GetStudents(null, pageInf, s => s.Name);
+            var studentsFeed = _studentsLogic.GetStudentsFeed(null, pageInf, s => s.Name);
+            var students = studentsFeed.Collection;
             var availableGroups = _groupsLogic.GetGroups();
 
             var studentVMs = AutoMapper.Mapper.Map<IEnumerable<StudentVM>>(students);
             var availableGroupVMs = AutoMapper.Mapper.Map<IEnumerable<GroupVM>>(availableGroups);
 
-            var viewModel = new StudentsPageVM() { Students = studentVMs, AvailableGroups = availableGroupVMs, PageInf = pageInf };
+            var viewModel = new StudentsPageVM()
+            {
+                Students = studentVMs,
+                AvailableGroups = availableGroupVMs,
+                PageInf = pageInf,
+                CountOfAllStudents = studentsFeed.Count
+            };
 
             return Json(viewModel);
         }

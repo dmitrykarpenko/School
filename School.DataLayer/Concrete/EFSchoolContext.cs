@@ -23,6 +23,12 @@ namespace School.DataLayer.Concrete
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Configurations.Add(new StudentsConfiguration());
+
+            var groupsConfig = new GroupsConfiguration();
+            groupsConfig.HasMany(g => g.Courses).WithMany(c => c.Groups);
+            modelBuilder.Configurations.Add(groupsConfig);
+
+            modelBuilder.Configurations.Add(new CoursesConfiguration());
         }
     }
 }

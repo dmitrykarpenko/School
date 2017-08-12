@@ -1,4 +1,5 @@
 ﻿using School.DataLayer.Abstract;
+using School.Logic.DTOs;
 using School.Model.Entities;
 using School.Model.Helpers;
 using System;
@@ -17,6 +18,36 @@ namespace School.Logic
         public StudentsLogic(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public Feed<StudentDTO> GetStudentsFeed(Expression<Func<Student, bool>> filter = null, PageInf pageInf = null,
+                                                Expression<Func<Student, object>> orderBy = null, bool byDesc = false)
+        {
+            var students = GetStudents(filter, pageInf, orderBy, byDesc).ToList();
+            var studentDTOs = AutoMapper.Mapper.Map<IEnumerable<StudentDTO>>(students); ;
+
+            var feed = new Feed<StudentDTO>() { Collection = studentDTOs };
+
+            if (pageInf != null && pageInf.IsValid())
+            {
+                feed.Skipped = (pageInf.Page - 1) * pageInf.PageSize;
+
+                int studentsCount = studentDTOs.Count();
+                if (studentsCount < pageInf.Page)
+                    feed.Count = studentsCount;
+            }
+            else
+            {
+                feed.Skipped = 0;
+            }
+
+            if (feed.Count == 0)
+            {
+                var studentsRepo = _unitOfWork.GetRepositiry<Student>();
+                feed.Count = studentsRepo.Count(filter);
+            }
+
+            return feed;
         }
 
         public IEnumerable<Student> GetStudents(Expression<Func<Student, bool>> filter = null, PageInf pageInf = null,

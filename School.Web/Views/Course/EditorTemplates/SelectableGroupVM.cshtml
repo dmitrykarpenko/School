@@ -1,0 +1,12 @@
+﻿@model School.Web.ViewModels.SelectableGroupVM
+
+<tr class="col-md-12">
+    @Html.HiddenFor(m => m.Id)
+    <td class="col-md-2 text-nowrap">
+        @Html.CheckBoxFor(m => m.Selected, new { @class = "chkSelect" })
+    </td>
+    <td class="col-md-10">
+        @Model.Name
+        @Html.HiddenFor(m => m.Name)
+    </td>
+</tr>

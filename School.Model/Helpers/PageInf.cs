@@ -10,5 +10,10 @@ namespace School.Model.Helpers
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
+
+        public bool IsValid()
+        {
+            return Page > 0 && PageSize > 0;
+        }
     }
 }

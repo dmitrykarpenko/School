@@ -8,22 +8,12 @@
 
 @section scripts
 {
-    <non-debug>
-        @*non-debug*@
-        @*<script src="~/Scripts/knockout-3.4.0.js"></script>
-            <script src="~/Scripts/knockout.validation.min.js"></script>
-            <script src="~/Scripts/knockout.mapping-latest.js"></script>*@
-        @*<script src="~/Scripts/FileSaver.min.js"></script>*@
-    </non-debug>
+    @Scripts.Render("~/bundles/knockout")
 
-    <debug>
-        <script src="~/Scripts/knockout-3.4.0.debug.js"></script>
-        <script src="~/Scripts/knockout.validation.js"></script>
-        <script src="~/Scripts/knockout.mapping-latest.debug.js"></script>
-    </debug>
-
-    <script src="~/Scripts/KoHelpers/koHelpers.js"></script>
+    <script src="~/Scripts/KoViewModels/groupVM.js"></script>
+    <script src="~/Scripts/KoViewModels/studentVM.js"></script>
     <script src="~/Scripts/KoViewModels/studentsPageVM.js"></script>
+
     <script type="text/javascript">
         (function(){
             //ko.extenders.required = koHelpers.koRequiredExtender;
@@ -39,6 +29,7 @@
 
 <div class="jumbotron">
     <h1>@ViewBag.Title</h1>
+    Total count: <span data-bind='text: countOfAllStudents'>&nbsp;</span> student(s)
 </div>
 <form class="form-horizontal col-md-4">
     <h2>Add new student</h2>
@@ -52,15 +43,16 @@
         <label class="control-label col-sm-2" for="newStudentGroup">Group:</label>
         <div class="col-sm-10">
             <select data-bind="options: $root.availableGroups,
-                                optionsText: function(item) {  return item().Name() + ' (ID: ' + item().Id + ')' },
-                                optionsValue: function(item) { return item().Id; },
-                                value: newStudent().Group().Id,
+                                optionsText: function(item) {  return item.Name() + ' (ID: ' + item.Id + ')' },
+                                optionsValue: function(item) { return item.Id; },
+                                value: newStudent().GroupId,
                                 optionsCaption: '(select a group)'"
-                            class="selectpicker pull-left select-block" id="newStudentGroup" data-live-search="true"></select>
+                            class="selectpicker pull-left select-block" id="newStudentGroup" data-live-search="true" data-width="fit"></select>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-3">
-        <button class="btn btn-warning" data-bind="enable: newStudent.isValid, click: saveNewStudent" type="submit">Save new student</button>
+        @*enable: newStudent.isValid*@
+        <button class="btn btn-warning" data-bind="click: saveNewStudent" type="submit">Save new student</button>
     </div>
 </form>
 
@@ -91,9 +83,9 @@
                 </td>
                 <td class="col-sm-6">
                     <select data-bind="options: $root.availableGroups,
-                                        optionsText: function(item) {  return item().Name() + ' (ID: ' + item().Id + ')' },
-                                        optionsValue: function(item) { return item().Id; },
-                                        value: $data.Group().Id,
+                                        optionsText: function(item) {  return item.Name() + ' (ID: ' + item.Id + ')' },
+                                        optionsValue: 'Id',
+                                        value: $data.GroupId,
                                         optionsCaption: '(select a group)'"
                             class="selectpicker pull-left" data-live-search="true"></select>
                 </td>

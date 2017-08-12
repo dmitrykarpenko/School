@@ -1,19 +1,32 @@
 "use strict";
 
 var StudentsPageVM = function (vmData) {
-
     var self = this;
 
-    self.students = ko.observableArray(toArrayOfStudentVMs(vmData.Students));
-    self.availableGroups = ko.observableArray(toArrayOfGroupVMs(vmData.AvailableGroups));
+    self.availableGroups = toArrayOfGroupVMs(vmData.AvailableGroups);
+
+    self.students = ko.observableArray(toArrayOfStudentVMs(vmData.Students, self.availableGroups));
+    self.students.errors = ko.validation.group(self.students);//, { deep: true, live: true });
+
     self.pageInf = vmData.PageInf;
-    self.newStudent = ko.validatedObservable(new StudentVM());
+
+    self.newStudent = ko.observable(createDefaultStudentVM());
+    self.newStudent.errors = ko.validation.group(self.newStudent);
+
+    self.countOfAllStudents = ko.observable(vmData.CountOfAllStudents);
+
     self.message = ko.observable("");
 
-    self.errors = ko.validation.group(self.students);//, { deep: true, live: true });
+    function createDefaultStudentVM() {
+        return new StudentVM(null, null, null, self.availableGroups);
+    };
 
     self.addNewStudent = function () {
-        self.students.push(ko.validatedObservable(new StudentVM()));
+        self.students.push(createDefaultStudentVM());
+
+        ++self.pageInf.PageSize;
+        koHelpers.increment(self.countOfAllStudents);
+
         $(".selectpicker").selectpicker("render");
     };
 
@@ -25,17 +38,25 @@ var StudentsPageVM = function (vmData) {
                 data: ko.toJSON({ id: student.Id }),
                 contentType: "application/json",
                 success: function () {
-                    self.students.remove(function (s) { return s().Id === student.Id; });
+                    self.students.remove(function (s) { return s.Id === student.Id; });
                     self.message(student.Name() + " removed");
+
+                    --self.pageInf.PageSize;
+                    koHelpers.decrement(self.countOfAllStudents);
                 }
             });
-        else
-            self.students.remove(function (s) { return s().Id === student.Id; });
+        else {
+            self.students.remove(function (s) { return s.Id === student.Id; });
+
+            --self.pageInf.PageSize;
+            koHelpers.decrement(self.countOfAllStudents);
+        }
+            
     };
 
     self.saveAll = function () {
-        self.errors.showAllMessages();
-        var allAreValid = self.errors().length == 0;
+        self.students.errors.showAllMessages();
+        var allAreValid = self.students.errors().length == 0;
 
         if (allAreValid)
             $.ajax({
@@ -46,7 +67,7 @@ var StudentsPageVM = function (vmData) {
                 success: function (data) {
                     ////rebinds every student as observable, right now not required
                     //ko.mapping.fromJS(data.students(), {}, self.students);
-                    self.students(toArrayOfStudentVMs(data.students));
+                    self.students(toArrayOfStudentVMs(data.students, self.availableGroups));
                     self.message("All students saved in DB");
 
                     $(".selectpicker").selectpicker("render");
@@ -61,8 +82,9 @@ var StudentsPageVM = function (vmData) {
             data: ko.toJSON(self.pageInf),
             contentType: "application/json",
             success: function (data) {
-                self.students(toArrayOfStudentVMs(data.Students));
-                self.availableGroups(toArrayOfGroupVMs(vmData.AvailableGroups));
+                self.students(toArrayOfStudentVMs(data.Students, self.availableGroups));
+                self.availableGroups = toArrayOfGroupVMs(data.AvailableGroups);
+                self.countOfAllStudents(data.CountOfAllStudents);
                 self.message("Students retrieved successfully");
 
                 $(".selectpicker").selectpicker("render");
@@ -70,13 +92,11 @@ var StudentsPageVM = function (vmData) {
         });
     };
 
-    self.increasePageSizeAndGetPage = function (increasedBy) {
-        debugger;
-        self.pageInf.PageSize += increasedBy;
+    self.increasePageSizeAndGetPage = function (increaseBy) {
+        self.pageInf.PageSize += increaseBy;
         self.getPage();
     };
     self.setPageInfAndGetPage = function (newPageInf) {
-        debugger;
         self.pageInf = newPageInf;
         self.getPage();
     };
@@ -88,43 +108,25 @@ var StudentsPageVM = function (vmData) {
     //}
 
     self.saveNewStudent = function (vmData) {
-        $.ajax({
-            url: "/Student/Save",
-            type: "POST",
-            data: ko.toJSON([vmData.newStudent]),
-            contentType: "application/json",
-            success: function (data) {
-                debugger;
-                ko.utils.arrayPushAll(self.students, toArrayOfStudentVMs(data.students));
-                self.message(data.students[0].Name + " saved successfully");
-                
-                $(".selectpicker").selectpicker("render");
-            }
-        });
+        self.newStudent.errors.showAllMessages();
+        var isValid = self.newStudent.errors().length == 0;
+        if (isValid)
+            $.ajax({
+                url: "/Student/Save",
+                type: "POST",
+                data: ko.toJSON([vmData.newStudent]),
+                contentType: "application/json",
+                success: function (data) {
+                    ko.utils.arrayPushAll(self.students, toArrayOfStudentVMs(data.students, self.availableGroups));
+                    self.message(data.students[0].Name + " saved successfully");
+                    self.newStudent(createDefaultStudentVM());
+
+                    ++self.pageInf.PageSize;
+                    koHelpers.increment(self.countOfAllStudents);
+
+                    $(".selectpicker").selectpicker("render");
+                }
+            });
     };
 };
 
-var StudentVM = function (id, name, group) {
-    this.Id = id || 0;
-    this.Name = ko.observable(name || "").extend({ required: true });//"Please enter student's a name" });
-    this.Group = ko.observable(group ? new GroupVM(group.Id, group.Name) : new GroupVM());
-};
-
-var GroupVM = function (id, name) {
-    this.Id = id || null;
-    this.Name = ko.observable(name || "");//.extend({ required: true });//"Please enter group's name" });
-};
-
-var toArrayOfStudentVMs = function (students) {
-    var studentVMs = ko.utils.arrayMap(students, function (student) {
-        return ko.validatedObservable(new StudentVM(student.Id, student.Name, student.Group));
-    });
-    return studentVMs;
-};
-
-var toArrayOfGroupVMs = function (groups) {
-    var groupVMs = ko.utils.arrayMap(groups, function (group) {
-        return ko.validatedObservable(new GroupVM(group.Id, group.Name));
-    });
-    return groupVMs;
-};

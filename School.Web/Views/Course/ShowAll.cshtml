@@ -1,0 +1,77 @@
+﻿@model School.Web.ViewModels.CoursesPageVM
+@using System.Web.Script.Serialization
+
+@{
+    ViewBag.Title = "Courses";
+    string data = new JavaScriptSerializer().Serialize(Model);
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/knockout")
+
+    <script src="~/Scripts/KoViewModels/courseVM.js"></script>
+    <script src="~/Scripts/KoViewModels/coursesPageVM.js"></script>
+
+    <script type="text/javascript">
+        (function(){
+            koHelpers.koInitValidation();
+
+            var data = @Html.Raw(data);
+            var viewModel = new CoursesPageVM(data);
+
+            ko.applyBindings(viewModel);
+        })();
+    </script>
+}
+
+<div class="jumbotron">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+<div class="row">
+    <form class="col-md-offset-3 col-md-6">
+        <h2>All courses</h2>
+        <div class="row">
+            <div class="alert alert-info alert-dismissable fade in col-md-10">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                We have <span data-bind='text: courses().length'>&nbsp;</span> course(s) shown:
+            </div>
+            <div class="col-md-2">
+                @Html.ActionLink("Add new", "AddNewOrEdit", "Course", null, new { @class = "btn btn-info" })
+            </div>
+        </div>
+        <div class="row">
+            <div data-bind='visible: message().length > 0' class="alert alert-success alert-dismissable fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                <span data-bind='text: message'>&nbsp;</span>
+            </div>
+        </div>
+        <table data-bind='visible: courses().length > 0' class="table table-hover table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th>Course (name)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind='foreach: courses'>
+                <tr class="form-group">
+                    <td class="col-md-8">
+                        <input type="text" data-bind='value: Name' class="form-control" placeholder="name" />
+                    </td>
+                    <td class="col-md-2"><a data-bind="attr: { href: editUrl() }" class="btn btn-info">Edit</a></td>
+                    <td class="col-md-2"><a href='#' data-bind='click: $root.deleteCourse' class="btn btn-danger">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="col-md-offset-1 col-md-11">
+            <button class="btn btn-default" data-bind='click: increasePageSizeAndGetPage.bind($data, 10)'>
+                <span class="glyphicon glyphicon-chevron-down"></span> Get ten more
+            </button>
+            <button class="btn btn-success" data-bind='click: getPage'>Refresh table</button>
+            <button class="btn btn-success" data-bind='click: addNewCourse'>Add new row</button>
+            <button class="btn btn-warning" data-bind='enable: courses().length > 0, click: saveAll' type='submit'>Save all</button>
+        </div>
+    </form>
+</div>

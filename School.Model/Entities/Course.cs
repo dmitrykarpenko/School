@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace School.Model.Entities
 {
-    public class Group : BaseEntity
+    public class Course : BaseEntity
     {
-        public ICollection<Student> Students { get; set; }
-        public ICollection<Course> Courses { get; set; }
+        public ICollection<Group> Groups { get; set; }
     }
 }

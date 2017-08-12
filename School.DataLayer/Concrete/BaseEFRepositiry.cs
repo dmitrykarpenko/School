@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq.Expressions;
 using School.DataLayer.Abstract;
 using School.Model.Helpers;
+using School.DataLayer.Helpers;
 
 namespace School.DataLayer.Concrete
 {
@@ -48,6 +49,12 @@ namespace School.DataLayer.Concrete
             return query.ToList();
         }
 
+        public int Count(Expression<Func<T, bool>> filter = null)
+        {
+            int count = filter != null ? _dbSet.Count(filter) : _dbSet.Count();
+            return count;
+        }
+
         //public virtual void Insert(T entity)
         //{
         //    _dbSet.Add(entity);
@@ -61,23 +68,20 @@ namespace School.DataLayer.Concrete
 
         public virtual IEnumerable<T> InsertOrUpdate(IEnumerable<T> entities)
         {
-            var ret = entities;// new List<T>(entities);
-            foreach (var entity in entities)
-                if (entity.Id == 0)
-                {
-                    T addedEntity = _dbSet.Add(entity);
-                    //_context.Entry(entity).State = EntityState.Added;
-                    ////TODO: fill added item id in "ret list"
-                }
-                else
-                {
-                    T temp = _dbSet.Attach(entity);
-                }
+            var ret = entities;
 
             foreach (var entity in entities)
             {
+                var entityCollections = ReflectionHelpers.GetCollections<IEntity>(entity);
+                //otherwise all items from inner collections will be added and probably duplicated
+                foreach (var col in entityCollections)
+                    foreach (var el in col)
+                        _context.Entry(el).State = el.Id == 0 ? EntityState.Added : EntityState.Unchanged;
+
                 _dbSet.Add(entity);
                 _context.Entry(entity).State = entity.Id == 0 ? EntityState.Added : EntityState.Modified;
+
+                //todo: consider setting all subentities state to added, modified or unchanged by Id
             }
 
             return ret;

@@ -15,7 +15,7 @@ namespace School.DataLayer.Concrete
         private ConcurrentDictionary<Type, object> _repos = new ConcurrentDictionary<Type, object>();
 
         //all entities which could have a repository
-        private static readonly List<Type> _entitiesWithRepos = new List<Type>() { typeof(Student), typeof(Group) };
+        private static readonly List<Type> _entitiesWithRepos = new List<Type>() { typeof(Student), typeof(Group), typeof(Course) };
 
         public IRepository<T> GetRepositiry<T>() where T : class, IEntity
         {

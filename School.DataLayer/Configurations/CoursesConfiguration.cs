@@ -3,12 +3,11 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace School.DataLayer.Configurations
 {
-    public class StudentsConfiguration : EntityTypeConfiguration<Student>
+    public class CoursesConfiguration : EntityTypeConfiguration<Course>
     {
-        public StudentsConfiguration()
+        public CoursesConfiguration()
         {
             Property(p => p.Name).HasMaxLength(100).IsRequired();
-            //Property(p => p.GroupId).IsOptional();
         }
     }
 }
