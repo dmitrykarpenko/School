@@ -1,11 +1,7 @@
 ﻿using School.DataLayer.Configurations;
 using School.Model.Entities;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MC = System.Data.Entity.ModelConfiguration;
 
 namespace School.DataLayer.Concrete
 {
@@ -33,13 +29,28 @@ namespace School.DataLayer.Concrete
 
             // Groups
 
-            var groupsConfig = new GroupsConfiguration();
-            groupsConfig.HasMany(g => g.Courses).WithMany(c => c.Groups);
-            modelBuilder.Configurations.Add(groupsConfig);
+            modelBuilder.Configurations.Add(new GroupsConfiguration());
+
+            modelBuilder.Entity<Group>()
+                .HasMany(g => g.Courses).WithMany(c => c.Groups)
+                .Map(x =>
+                {
+                    x.MapLeftKey("GroupId");
+                    x.MapRightKey("CourseId");
+                    x.ToTable("GroupCourses");
+                });
 
             // Courses
 
             modelBuilder.Configurations.Add(new CoursesConfiguration());
+
+            //// GroupCourses
+            ////EntityTypeConfiguration<Group>
+
+            //var groupCoursesConfig = new MC.EntityTypeConfiguration<GroupCourse>()
+            //    .HasRequired(gc => gc.Group).WithMany(g => g.Courses).HasForeignKey(g => g.CourseId);
+
+            //modelBuilder.Configurations.Add();
         }
     }
 }
