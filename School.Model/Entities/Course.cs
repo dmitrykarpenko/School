@@ -8,6 +8,6 @@ namespace School.Model.Entities
 {
     public class Course : BaseEntity
     {
-        public ICollection<Group> Groups { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace School.Model.Entities
     public class Student : BaseEntity
     {
         public int? GroupId { get; set; } = null;
-        public Group Group { get; set; }
+        public virtual Group Group { get; set; }
     }
 }

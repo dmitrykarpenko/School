@@ -8,7 +8,7 @@ namespace School.Model.Entities
 {
     public class Group : BaseEntity
     {
-        public ICollection<Student> Students { get; set; }
-        public ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
+        public virtual ICollection<Course> Courses { get; set; }
     }
 }
